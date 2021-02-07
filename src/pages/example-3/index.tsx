@@ -45,6 +45,11 @@ const createBaseContainer = (
   return d3.select(HTMLElement).append('svg').attr('width', width).attr('height', height);
 };
 
+const initializeConfig = () => {
+  config.dates.width = 400;
+  config.tasks.height = 400;
+};
+
 const drawCorner = (corner: d3.Selection<SVGSVGElement, unknown, null, any>) => {
   corner
     .append('line')
@@ -65,7 +70,19 @@ const drawCorner = (corner: d3.Selection<SVGSVGElement, unknown, null, any>) => 
     .attr('stroke', config.stroke.color);
 };
 
+const drawDate = (corner: d3.Selection<SVGSVGElement, unknown, null, any>) => {
+  corner
+    .append('line')
+    .attr('x1', 0)
+    .attr('x2', config.dates.width)
+    .attr('y1', config.dates.months.height + config.dates.days.height)
+    .attr('y2', config.dates.months.height + config.dates.days.height)
+    .attr('stroke-width', config.stroke.width)
+    .attr('stroke', config.stroke.color);
+};
+
 const Example1 = (): React.ReactElement => {
+  initializeConfig();
   const cornerRef = useRef<HTMLDivElement>();
 
   useEffect(() => {
@@ -75,7 +92,13 @@ const Example1 = (): React.ReactElement => {
         config.groups.width,
         config.dates.months.height + config.dates.days.height,
       );
+      const datesContainer = createBaseContainer(
+        cornerRef.current,
+        config.dates.width,
+        config.dates.months.height + config.dates.days.height,
+      );
       drawCorner(cornerContainer);
+      drawDate(datesContainer);
     }
   }, []);
 
